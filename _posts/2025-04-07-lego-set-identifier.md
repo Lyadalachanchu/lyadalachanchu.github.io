@@ -90,11 +90,7 @@ It consists of 2 steps:
 1. Randomly initialize set proportions $\pi^{(0)}$ and piece assignments $z_i^{(0)}$ for each observed piece i.
 2. Cycle through each parameter to calculate $P(\pi|observations)$. We first 
 
-$$\begin{align*}
-z_i^{(t+1)} &\sim P(z_i \mid \pi^{(t)}, \text{piece}_i) \quad \text{for each } i = 1, \dots, n \\
-\pi^{(t+1)} &\sim P(\pi \mid z_1^{(t+1)}, \dots, z_n^{(t+1)})
-\end{align*}
-$$
+<pre> ```latex \begin{align*}z_i^{(t+1)} &\sim P(z_i \mid \pi^{(t)}, \text{piece}_i) \quad \text{for each } i = 1, \dots, n \\\pi^{(t+1)} &\sim P(\pi \mid z_1^{(t+1)}, \dots, z_n^{(t+1)})\end{align*} ``` </pre>
 Here, we first sample which set each piece came from, given the mixture proportions. This is the Gibbs step for $z_i$. Then we perform the Gibbs step for $\pi$ by sampling a new $\pi$ based on the current set assignment counts (ie. we calculate $P(\pi|z_1, ..., z_n)$).
 
 I modelled the distributions of $\pi$ using a Dirichlet distribution ([since its conjugate with the categorial distribution](https://stephentu.github.io/writeups/dirichlet-conjugate-prior.pdf)). This means that since my prior is a Dirichlet distribution and my observations (set assignments) come from a categorical distribution, the posterior is also Dirichlet.

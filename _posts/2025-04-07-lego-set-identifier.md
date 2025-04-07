@@ -55,10 +55,10 @@ P(\text{observations} \mid \pi) = \prod_{i=1}^{n} P(\text{piece}_i \mid \pi)
 = \prod_{i=1}^{n} \sum_{j=1}^{M} \pi_j \cdot P(\text{piece}_i \mid S_j)
 $$
 
-where \( n \) is the number of observations.  
-This would be easy enough to solve if we knew \( \pi_j \), but we don't :(.  
+where $n$ is the number of observations.  
+This would be easy enough to solve if we knew $\pi_j$, but we don't :(.  
 
-I tried several approaches to estimate \( \pi_j \), including Expectation Maximization and some MCMC methods. I compared the evaluated methods across different numbers of sets in the bucket, number of pieces seen, time taken to produce predictions, number of possible sets to choose from, and number of iterations. You can find the simulation and evaluation code [here](https://github.com/Lyadalachanchu/BayesdLegoSetIdentifier/tree/main).
+I tried several approaches to estimate $\pi_j$, including Expectation Maximization and some MCMC methods. I compared the evaluated methods across different numbers of sets in the bucket, number of pieces seen, time taken to produce predictions, number of possible sets to choose from, and number of iterations. You can find the simulation and evaluation code [here](https://github.com/Lyadalachanchu/BayesdLegoSetIdentifier/tree/main).
 
 ## Expectation Maximization Math
 This is the first [algorithm](https://www.columbia.edu/~mh2078/MachineLearningORFE/EM_Algorithm.pdf) that came to mind and we can use it out of the box for this problem. Its used to determine the maximum likelihood estimates of parameters when some of the data is missing. We're trying to estimate the latent parameters (the unknown set assignments for each piece) \[$\pi_1, \pi_2, ..., \pi_n$] with incomplete data, \[$piece_1, piece_2, ..., piece_n$] (we don't know the set identity of each observed piece). The EM process consists of iteratively applying two steps, the E(xpectation)-step and the M(aximization)-step, until we converge to some estimate of $\pi$ that maximizes the likelihood of the observed pieces.

@@ -22,8 +22,8 @@ rss: rss
 
 markdown: kramdown
 kramdown:
-  math_engine: mathjax
   input: GFM
+  math_engine: mathjax
   syntax_highlighter_opts:
     disable: true
 

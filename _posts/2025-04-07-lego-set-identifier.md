@@ -8,7 +8,7 @@ I got introduced to this ecosystem and problem through my friend's startup. Righ
 
 Incorporating some algorithm that optimally assigns each piece to each set directly would increase the average price per piece of the pieces sold, while allowing humans to focus on tasks they are better suited to. This task also seems interesting from a technical perspective. The task into is essentially a probabilistic, online optimization problem. The full contents of the tub are unknown, so the system must constantly update its belief about which sets are present. With each piece, it must decide on the fly where to assign it to maximize value. And exhaustively checking all combinations is intractable, so the problem calls for some approximation algorithms or sampling methods. Add real-world constraints like limited buckets, uncertain piece recognition, and noisy inputs, and you’ve got a genuinely rich AI problem blending vision, probabilistic reasoning, and decision-making under uncertainty.
 
-![Ghibli-style Lego sorting](../imgs/intro_pic.jpg)
+![Ghibli-style Lego sorting](/imgs/intro_pic.jpg)
 
 ### Sidenote
 This area seems to be a goldmine of interesting optimization problems. For example, we only have a fixed number of buckets we are sorting to, and we're only going through the pieces once. Would it make more sense to do some sort of hierarchical sorting with multiple passes to optimize price per piece (where we'd have a better prior of pieces than using the initial unsorted buckets)? Another problem that is not discussed here would be optimizing not only for full, complete sets, but also for set value. So there'd be cases where we'd accept a lower likelihood of a full set if that set can be sold at a higher price.
@@ -53,7 +53,7 @@ Monte Carlo Markov Chain methods are a class of methods that allow us to approxi
 
 The monte carlo part of the MCMC refers to method of performing a simulation to approximate a quantity that would otherwise be hard to determine. For example you can use monte carlo sampling to approximate the area of a circle by randomly drawing points and seeing how many fall inside the circle.
 
-![mc-circle-example](../imgs/MCMC.jpg)
+![mc-circle-example](/imgs/MCMC.jpg)
 
 However sometimes, like in our case, it is hard to even sample points from a probability distribution (as a reminder, we're trying to determine $P(\pi|observations)$ using the likelihood $P(observations|\pi)$). The likelihood, given by $P(observations|\pi) =\prod_{i=1}^{n}\sum_{j=1}^{M}\pi_j*P(piece_k|S_j)$ is difficult to sample from.
 
@@ -117,7 +117,7 @@ For each method, I varied the following four factors:
 - **Number of iterations**: `num_iterations = [1_000, 10_000, 100_000]` (for EM, this is capped rather than run to convergence)
 
 Below are the plots that show the effect of each factor independently (all other factors are averaged over):
-![results](../imgs/results.png)
+![results](/imgs/results.png)
 Performance drops sharply as more sets are added to the bucket. This is expected: with more sets present, the piece distribution becomes increasingly entangled and ambiguous, making it harder to attribute any single piece to the correct set, since every unique set of pieces that each set brings to the bucket, increases the potential sets the bucket could've come from.  Interestingly, EM and Gibbs sampling outperform both versions of MH in this setting, especially when only one or ten sets are involved. MH struggles the most here, suggesting that it doesn't explore the space well when the signal is faint and the posterior is highly multimodal. All methods consistently improve as more pieces are observed, which is makes sense: more evidence leads to better inference. However, vanilla MH shows the steepest curve, jumping from nearly useless at 10 pieces to decent performance at 100–1000. This suggests that MH may require a critical mass of observations to begin converging on useful hypotheses. In contrast, EM performs quite well even with very little data, which is surprising given its typical reliance on smooth likelihood surfaces.
 
 As we increase the number of iterations, all methods improve which is not surprising; There are differences though:

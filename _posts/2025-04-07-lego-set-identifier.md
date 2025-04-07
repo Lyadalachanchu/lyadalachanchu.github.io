@@ -1,5 +1,7 @@
 # Building a Lego Set Identifier
 _With a bucket of Lego, you can tell any story_. - Christopher Miller
+
+
 We've all played with Lego, at one point or another, clicking together bricks to create whats on the box it came in or something entirely our own. But beyond childhood memories, there exists a massive, thriving second-hand Lego ecosystem that I was unaware existed. Here, people often buy and sell their Lego bricks once they've had their fun building whatever set each piece came from. There even exist brick and mortar stores where people show up with tubs of old Lego parts. Although more often its sold online on platforms like [Bricklink](https://www.bricklink.com/v2/main.page), which see an absurd number of Lego pieces being traded every day. 
 
 Of course, with scale comes complexity. These second hand stores have actual humans sorting through these Lego buckets, a piece at a time. These pieces are often sold individually or in bulk, depending on how rare they are. However, sometimes they are also sold in sets, which yield a much higher average price per piece. But these second hand sets are time consuming to create (since they need to go around and collect the buckets of sorted pieces) and which set to create (based on their inventory) to maximize value. Other "bundles" are also sold, like incomplete sets and minifigures, but these tend to yield, on average, a lower average price per piece.
@@ -31,17 +33,48 @@ Where the set-piece probability is defined as:
 $P(piece_k|S_j) = \frac{\text{count of piece}_k \text{ in set } S_j}{\text{number of pieces in set } S_j}$ 
 We get this information using the [Bricklink API](https://www.bricklink.com/v3/api.page?page=auth). 
 
-We can also calculate the probability of seeing some piece from the unsorted bucket by calculating $P(piece_k|\pi)=\sum_{j=1}^{M}P(piece_k|S_j)*P(S_j) = \sum_{j=1}^{M}P(piece_k|S_j)*P(\pi_j)$.
+We can also calculate the probability of seeing some piece from the unsorted bucket by:
 
-We want to calculate $P(\pi \mid \text{observations}) \propto \underbrace{P(\text{observations} \mid \pi)}_{\text{likelihood}} \cdot \underbrace{P(\pi)}_{\text{prior}}$  from Bayes rule. We assume the prior to be a uniform distribution, where each set is equally likely. The likelihood term can be re-written as follows:
-$P(observations|\pi) = \prod_{i=1}^{n}P(piece_i|\pi) = \prod_{i=1}^{n}\sum_{j=1}^{M}\pi_j*P(piece_k|S_j)$ 
-, where $n$ is the number of observations. This would be easy enough to solve if we knew $\pi_j$, but we don't :(. I tried several approaches to estimate $\pi_j$, including expectation maximization and some MCMC methods. I compared the evaluated methods across different number of sets in the bucket, number of pieces seen, time taken to produce prediction, number of possible sets to choose from, and number of iterations. You can find the simulation and evaluation code [here](https://github.com/Lyadalachanchu/BayesdLegoSetIdentifier/tree/main).
+$$
+P(\text{piece}_k \mid \pi) = \sum_{j=1}^{M} P(\text{piece}_k \mid S_j) \cdot P(S_j) = \sum_{j=1}^{M} P(\text{piece}_k \mid S_j) \cdot P(\pi_j)
+$$
+
+We want to calculate the posterior distribution using Bayes' rule:
+
+$$
+P(\pi \mid \text{observations}) \propto 
+\underbrace{P(\text{observations} \mid \pi)}_{\text{likelihood}} \cdot 
+\underbrace{P(\pi)}_{\text{prior}}
+$$
+
+We assume the prior to be a uniform distribution, where each set is equally likely.  
+The likelihood term can be re-written as:
+
+$$
+P(\text{observations} \mid \pi) = \prod_{i=1}^{n} P(\text{piece}_i \mid \pi) 
+= \prod_{i=1}^{n} \sum_{j=1}^{M} \pi_j \cdot P(\text{piece}_i \mid S_j)
+$$
+
+where \( n \) is the number of observations.  
+This would be easy enough to solve if we knew \( \pi_j \), but we don't :(.  
+
+I tried several approaches to estimate \( \pi_j \), including Expectation Maximization and some MCMC methods. I compared the evaluated methods across different numbers of sets in the bucket, number of pieces seen, time taken to produce predictions, number of possible sets to choose from, and number of iterations. You can find the simulation and evaluation code [here](https://github.com/Lyadalachanchu/BayesdLegoSetIdentifier/tree/main).
 
 ## Expectation Maximization Math
 This is the first [algorithm](https://www.columbia.edu/~mh2078/MachineLearningORFE/EM_Algorithm.pdf) that came to mind and we can use it out of the box for this problem. Its used to determine the maximum likelihood estimates of parameters when some of the data is missing. We're trying to estimate the latent parameters (the unknown set assignments for each piece) \[$\pi_1, \pi_2, ..., \pi_n$] with incomplete data, \[$piece_1, piece_2, ..., piece_n$] (we don't know the set identity of each observed piece). The EM process consists of iteratively applying two steps, the E(xpectation)-step and the M(aximization)-step, until we converge to some estimate of $\pi$ that maximizes the likelihood of the observed pieces.
 #### E-Step
-In this step, we compute the posterior probability that $piece_k$ came from set $S_j$, $P(S_j|piece_k, \pi)$. Using Bayes rule, this can be written as $\gamma_{kj} := P(S_j|piece_k, \pi) = \frac{P(piece_k|S_j)*P(S_j)}{P(piece_k|\pi)} = \frac{P(piece_k|S_j)*\pi_j}{\sum_{l=1}^{M}\pi_l*P(piece_k|S_l)}$ 
-Where $\gamma_{kj}$ is a soft assignment of piece $i$ belonging to set $S_j$.
+In this step, we compute the posterior probability that \( \text{piece}_k \) came from set \( S_j \), that is, \( P(S_j \mid \text{piece}_k, \pi) \).  
+Using Bayes' rule, this can be written as:
+
+$$
+\gamma_{kj} := P(S_j \mid \text{piece}_k, \pi) 
+= \frac{P(\text{piece}_k \mid S_j) \cdot P(S_j)}{P(\text{piece}_k \mid \pi)} 
+= \frac{P(\text{piece}_k \mid S_j) \cdot \pi_j}
+       {\sum_{l=1}^{M} \pi_l \cdot P(\text{piece}_k \mid S_l)}
+$$
+
+Here, \( \gamma_{kj} \) is a soft assignment of piece \( k \) to set \( S_j \).
+
 #### M-Step
 In this step, we update the estimates of $\pi_j$ based on the soft assignments calculated in the E-step. We just average over how much each piece belongs to each set:
 $\pi_j = \frac{1}{n}\sum_{k=1}^{n}\gamma_{kj}$
@@ -55,7 +88,15 @@ The monte carlo part of the MCMC refers to method of performing a simulation to 
 
 ![mc-circle-example](/imgs/MCMC.jpg)
 
-However sometimes, like in our case, it is hard to even sample points from a probability distribution (as a reminder, we're trying to determine $P(\pi|observations)$ using the likelihood $P(observations|\pi)$). The likelihood, given by $P(observations|\pi) =\prod_{i=1}^{n}\sum_{j=1}^{M}\pi_j*P(piece_k|S_j)$ is difficult to sample from.
+However, sometimes—like in our case—it is hard to even sample points from a probability distribution.  
+As a reminder, we're trying to determine \( P(\pi \mid \text{observations}) \) using the likelihood \( P(\text{observations} \mid \pi) \).  
+The likelihood is given by:
+
+$$
+P(\text{observations} \mid \pi) = \prod_{i=1}^{n} \sum_{j=1}^{M} \pi_j \cdot P(\text{piece}_i \mid S_j)
+$$
+
+This expression is difficult to sample from directly, due to the nested summation inside the product.
 
 We can use [Markov Chains](https://hpaulkeeler.com/the-second-mc-in-mcmc-methods/) (if you want an even more detailed [understanding](https://gregorygundersen.com/blog/2019/10/28/ergodic-markov-chains/)) to sample from an intractable probability distribution. These are useful, because these Markov Chains, after an initial burn in period, [have a stationary distribution](https://stats.stackexchange.com/questions/466069/how-does-a-markov-chain-converge-to-a-distribution-we-dont-know) (over the states visited during the walk). If we can construct a Markov Chain such that this stationary distribution is the one we want to sample from, we have a way to efficiently sample from our probability distribution. Methods such as Metropolis Hastings or Gibbs Sampling construct some (implicit) Markov Chain such that this property holds.
 
@@ -88,7 +129,7 @@ Gibbs sampling allows us to sample from a joint distribution over multiple varia
 
 It consists of 2 steps:
 1. Randomly initialize set proportions $\pi^{(0)}$ and piece assignments $z_i^{(0)}$ for each observed piece i.
-2. Cycle through each parameter to calculate $P(\pi|observations)$. We first 
+2. Cycle through each parameter to calculate \( P(\pi \mid \text{observations}) \).
 
 $$\begin{align*}
 z_i^{(t+1)} &\sim P(z_i \mid \pi^{(t)}, \text{piece}_i) \quad \text{for each } i = 1, \dots, n \\

@@ -1,3 +1,7 @@
+<script type="text/javascript" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
 # Building a Lego Set Identifier
 _With a bucket of Lego, you can tell any story_. - Christopher Miller
 We've all played with Lego, at one point or another, clicking together bricks to create whats on the box it came in or something entirely our own. But beyond childhood memories, there exists a massive, thriving second-hand Lego ecosystem that I was unaware existed. Here, people often buy and sell their Lego bricks once they've had their fun building whatever set each piece came from. There even exist brick and mortar stores where people show up with tubs of old Lego parts. Although more often its sold online on platforms like [Bricklink](https://www.bricklink.com/v2/main.page), which see an absurd number of Lego pieces being traded every day. 

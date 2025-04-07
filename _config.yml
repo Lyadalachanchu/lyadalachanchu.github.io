@@ -22,9 +22,10 @@ rss: rss
 
 markdown: kramdown
 kramdown:
+  math_engine: mathjax
+  input: GFM
   syntax_highlighter_opts:
     disable: true
-    math_engine: mathjax
 
 
     

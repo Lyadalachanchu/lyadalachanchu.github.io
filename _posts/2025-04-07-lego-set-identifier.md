@@ -73,7 +73,7 @@ $$
        {\sum_{l=1}^{M} \pi_l \cdot P(\text{piece}_k \mid S_l)}
 $$
 
-Here, \( \gamma_{kj} \) is a soft assignment of piece \( k \) to set \( S_j \).
+Here, $\gamma_{kj}$ is a soft assignment of piece $k$ to set $S_j$.
 
 #### M-Step
 In this step, we update the estimates of $\pi_j$ based on the soft assignments calculated in the E-step. We just average over how much each piece belongs to each set:

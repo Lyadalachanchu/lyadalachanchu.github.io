@@ -63,7 +63,7 @@ I tried several approaches to estimate \( \pi_j \), including Expectation Maximi
 ## Expectation Maximization Math
 This is the first [algorithm](https://www.columbia.edu/~mh2078/MachineLearningORFE/EM_Algorithm.pdf) that came to mind and we can use it out of the box for this problem. Its used to determine the maximum likelihood estimates of parameters when some of the data is missing. We're trying to estimate the latent parameters (the unknown set assignments for each piece) \[$\pi_1, \pi_2, ..., \pi_n$] with incomplete data, \[$piece_1, piece_2, ..., piece_n$] (we don't know the set identity of each observed piece). The EM process consists of iteratively applying two steps, the E(xpectation)-step and the M(aximization)-step, until we converge to some estimate of $\pi$ that maximizes the likelihood of the observed pieces.
 #### E-Step
-In this step, we compute the posterior probability that \( \text{piece}_k \) came from set \( S_j \), that is, \( P(S_j \mid \text{piece}_k, \pi) \).  
+In this step, we compute the posterior probability that $\text{piece}_k$ came from set $S_j$, that is, $P(S_j \mid \text{piece}_k, \pi)$.
 Using Bayes' rule, this can be written as:
 
 $$
@@ -89,7 +89,7 @@ The monte carlo part of the MCMC refers to method of performing a simulation to 
 ![mc-circle-example](/imgs/MCMC.jpg)
 
 However, sometimes—like in our case—it is hard to even sample points from a probability distribution.  
-As a reminder, we're trying to determine \( P(\pi \mid \text{observations}) \) using the likelihood \( P(\text{observations} \mid \pi) \).  
+As a reminder, we're trying to determine $P(\pi \mid \text{observations})$ using the likelihood $P(\text{observations} \mid \pi)$.  
 The likelihood is given by:
 
 $$
@@ -129,15 +129,18 @@ Gibbs sampling allows us to sample from a joint distribution over multiple varia
 
 It consists of 2 steps:
 1. Randomly initialize set proportions $\pi^{(0)}$ and piece assignments $z_i^{(0)}$ for each observed piece i.
-2. Cycle through each parameter to calculate \( P(\pi \mid \text{observations}) \).
+2. Cycle through each parameter to calculate $P(\pi \mid \text{observations})$.
 
-$$\begin{align*}
+$$
+\begin{aligned}
 z_i^{(t+1)} &\sim P(z_i \mid \pi^{(t)}, \text{piece}_i) \quad \text{for each } i = 1, \dots, n \\
 \pi^{(t+1)} &\sim P(\pi \mid z_1^{(t+1)}, \dots, z_n^{(t+1)})
-\end{align*}
+\end{aligned}
 $$
 
-Here, we first sample which set each piece came from, given the mixture proportions. This is the Gibbs step for $z_i$. Then we perform the Gibbs step for $\pi$ by sampling a new $\pi$ based on the current set assignment counts (ie. we calculate $P(\pi|z_1, ..., z_n)$).
+
+Here, we first sample which set each piece came from, given the mixture proportions. This is the Gibbs step for $z_i$. Then we perform the Gibbs step for $\pi$ by sampling a new $\pi$ based on the current set assignment counts (i.e., we calculate $P(\pi \mid z_1, \dots, z_n)$).
+
 
 I modelled the distributions of $\pi$ using a Dirichlet distribution ([since its conjugate with the categorial distribution](https://stephentu.github.io/writeups/dirichlet-conjugate-prior.pdf)). This means that since my prior is a Dirichlet distribution and my observations (set assignments) come from a categorical distribution, the posterior is also Dirichlet.
 $\pi∼\text{Dirichlet}(α_1​,…,α_M​)$ , with the $\alpha_j$ acting as a prior belief in how common set $j$ is before seeing the observations. The posterior also turns out to be Dirichlet because the prior is $P(\pi) = Dir(\alpha_1, ..., \alpha_M) \propto \prod_{j=1}^{M}\pi_j^{\alpha_j-1}$ and the likelihood is $P(z|\pi) = \prod_{j=1}^{M}\pi_j^{n_j}$, where $n_j$ is the number of times the observed pieces were assigned to set $j$. Using Bayes' rule, $P(\pi|z) = P(z|\pi)*P(\pi) \propto \prod_{j=1}^{M}\pi_j^{\alpha_j-1} * \prod_{j=1}^{M}\pi_j^{n_j} = \prod_{j=1}^{M}\pi_j^{\alpha+n_j+-1}$. This is the form of a Dirichlet distribution: $\pi|z ∼ Dir(\alpha_1+n_1, ..., \alpha_M+n_M)$. 

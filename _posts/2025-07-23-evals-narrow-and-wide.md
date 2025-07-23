@@ -57,10 +57,10 @@ Some concrete examples of narrow benchmarks are provided below. Each benchmark f
 
 | Benchmark | What it measures | How it is measured |
 | --- | --- | --- | --- |
-| [HumanEval](https://github.com/openai/human-eval?tab=readme-ov-file) | Functional correctness of code generation on 164 hand-written Python programming tasks. | Model produces k code samples per task; each sample is executed against hidden unit tests. pass@k = probability ≥ 1 sample passes the tests (commonly k = 1, 10, 100). |
+| [HumanEval](https://github.com/openai/human-eval?tab=readme-ov-file) | Functional correctness of code generation on 164 hand-written Python programming tasks. | Model produces k code samples per task; each sample is executed against hidden unit tests. pass@k = probability >= 1 sample passes the tests (commonly k = 1, 10, 100). |
 | [GPQA](https://arxiv.org/abs/2311.12022) | Graduate-level, “Google-proof” knowledge & reasoning in biology, physics and chemistry (448 four-choice questions). | Simple multiple-choice accuracy: proportion of questions answered correctly; expert baseline ≈ 65% illustrates difficulty. |
 | [WMDP](https://arxiv.org/abs/2403.03218) | Extent of hazardous knowledge that could aid biological, chemical or cyber weapons (3,668 four-choice questions). | Multiple-choice accuracy serves as a proxy for dangerous capability; benchmark is often used to test unlearning: lowering accuracy on WMDP while retaining other skills. |
-| [**LAB-Bench**](https://arxiv.org/abs/2407.10362) | Practical biology-research skills: literature & database reasoning, figure/table interpretation, DNA / protein sequence manipulation, protocol planning (around 2,457 items). | Each item is multiple-choice with an explicit “I don’t know” option. Reports Accuracy (correct / total) and Precision (correct / attempted) to capture both competence and calibrated refusal. |
+| [LAB-Bench](https://arxiv.org/abs/2407.10362) | Practical biology-research skills: literature & database reasoning, figure/table interpretation, DNA / protein sequence manipulation, protocol planning (around 2,457 items). | Each item is multiple-choice with an explicit “I don’t know” option. Reports Accuracy (correct / total) and Precision (correct / attempted) to capture both competence and calibrated refusal. |
 
 
 **Advantages and Disadvantages**

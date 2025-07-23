@@ -10,7 +10,7 @@ To flag models that could plausibly be an x-risk, we need concrete markers that 
 -   High capabilities in dangerous tasks (eg. biological weapon design, cyber, …)
 -   Situational awareness & deception (“scheming”)
 
-# Desiriderata for Evals
+# Desiderata for Evals
 
 When there are structural limitations with evals, they either over- or under-estimate the capability of models in general. The former case is especially dangerous as it not only yields false assurances about the limitations of tested models, but also guides optimization effort towards the wrong target as well, depending on how exactly capability is mis-measured. Therefore, it's important to keep in mind several desiridata for evals that allow us to accurately measure the true capability/ies of the model.
 

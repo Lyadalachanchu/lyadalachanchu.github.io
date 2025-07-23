@@ -154,7 +154,7 @@ Most of these benchmarks use LLMs as a judge or heuristic scores as an intermedi
 | [DarkBench](https://arxiv.org/abs/2503.10728) | 660 prompts crafted to elicit six “dark-pattern” behaviors (brand bias, retention, sycophancy, etc.) | Dark-pattern detection rate & severity across categories |
 | [MASK: Model Alignment between Statements and Knowledge](https://arxiv.org/pdf/2503.03750) | Thousands of Q-A pairs where truth is known; model is pressured to lie; honesty judged separately from accuracy | “Honesty gap” = truthful vs. deceptive answer divergence.<br><br>While larger models obtain higher accuracy on this benchmark, they do not become more honest. |
 | [OpenDeception](https://arxiv.org/abs/2504.13707) | Multi-turn agent simulations in 5 everyday scenarios; examines internal reasoning traces for intent | Deception-intention ratio & deception-success % |
-| [MACHIAVELLI](https://arxiv.org/abs/2304.03279) | Agent plays 134 choose-your-own-adventure games with ethical annotations; reward vs. harm is tracked | “Machiavellianism” score = reward gained per unit ethical cost | Power-seeking and moral-constraint-breaking |
+| [MACHIAVELLI](https://arxiv.org/abs/2304.03279) | Agent plays 134 choose-your-own-adventure games with ethical annotations; reward vs. harm is tracked | “Machiavellianism” score = reward gained per unit ethical cost |
 
 
 ### Redteaming

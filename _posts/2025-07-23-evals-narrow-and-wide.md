@@ -140,7 +140,7 @@ Indeed, the human doesn’t need to be in the loop. This can work among models a
 
 ## Propensity Evals
 
-Early safety work focused on measuring dangerous capabilities such as stealthy code writing or situational awareness, but researchers now stress that an additional propensity dimension is needed to decide deployment thresholds.  [Recent DeepMind studies](https://arxiv.org/abs/2403.13793)  propose separate metrics for ability and inclination, arguing that a model that fails capability tests is dangerous, yet a model that passes capability tests but often refuses misuse may still be deployable under safeguards.
+Early safety work focused on measuring dangerous capabilities such as stealthy code writing or situational awareness, but researchers now stress that an additional propensity dimension is needed to decide deployment thresholds.  [Recent DeepMind studies](https://arxiv.org/abs/2403.13793)  propose separate metrics for ability and inclination, arguing that a model that fails capability tests is dangerous, yet a model that fails capability tests but often refuses misuse may still be deployable under safeguards.
 
 Propensity evaluations aim to measure not just whether a model can do something dangerous, but whether it tends to choose to do so, especially when multiple viable options exist. They probe the model’s internal preferences, looking at how it behaves under freedom of choice, especially in morally or strategically significant scenarios.
 

@@ -33,7 +33,7 @@ You can also do row or column reductions in einsum. `np.einsum("ij -> i", A)` su
 
 ![Pasted image 20250429154022.png](/imgs/einsum/1.png)
 
-You might have noticed in the first example, you'd get the same output if the output axes were not explicitly specified. If you skip the `->` and output labels, NumPy will automatically pick every index that appears only once, sort those letters alphabetically, and use them as the output. In other words, writing `'ij,jk->ik'` is exactly the same as just `'ij,jk'`. The benefit of specifying the output axes order is so **we can transpose the output any way we like, by specifying the order of the argument (unsummed) axes in the output**. An example transpose is shown below.
+You might have noticed in the first example, you'd get the same output if the output axes were not explicitly specified. If you skip the `->` and output labels, NumPy will automatically pick every index that appears only once, sort those letters alphabetically, and use them as the output. In other words, writing `'ij,jk->ik'` is exactly the same as just `'ij,jk'`. The benefit of specifying the output axes order is so we can transpose the output any way we like, by specifying the order of the argument (unsummed) axes in the output. An example transpose is shown below.
 
 ![Pasted image 20250429161019.png](/imgs/einsum/2.png)
 
@@ -138,21 +138,14 @@ This is essentially the same logic as the first set of loops we saw. Just now, w
 <details>
 <summary><strong>Inputs that work</strong></summary>
 
-<br>
-
 ```python
 # Tensor multiplication (no transposes)
 tensor_a = torch.rand(3, 2, 4, 2)
 tensor_b = torch.rand(3, 3, 5, 2)
-example_str = "jilw, jekw-> ik"
-
-# Broadcasting
-tensor_a = torch.rand(3)
-tensor_b = torch.rand(3, 2, 2)
-example_str = "j, jkl-> k"
+example_str = "jilw, jekw->ik"
 ```
-</details>
-    
+
+</details> 
 
 ## Details
 

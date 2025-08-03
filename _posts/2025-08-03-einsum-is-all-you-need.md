@@ -428,12 +428,12 @@ and we want to calculate the expression `ab,bc,cd->ad` . If we go left to right 
 
 1. Contract `A` and `B` :
     1. Shapes: (1000,10) @ (10,1000) → (1000,1000)
-    2. Cost: 1000*10*1000*2 = 2e7 FLOPS
+    2. Cost: 1000\*10\*1000*2 = 2e7 FLOPS
         1. Two free dimensions of size 1000 and one common dimension of size 10. Each time we do two operations (an addition and a multiplication: `acc += A[i, k] * B[k, j]`)
     3. Intermediate size: 1000*1000=1e6 elements
 2. Contract result with `C` :
     1. Shapes: (1000,1000) @ (1000,10) → (1000,10)
-    2. Cost: 1000*1000*10*2 = 2e7 FLOPS
+    2. Cost: 1000\*1000\*10*2 = 2e7 FLOPS
 3. Cost
     1. Compute: 4e7 FLOPs
     2. Peak memory: 1e6 elements
@@ -570,6 +570,7 @@ This table shows how each implementation scales with the size of each dimension 
 
 This table shows how the runtime varies with the number of tensors. For this table each tensor is “square” with a size of 32. I use einsum strings that follow the chain multiplication pattern (`ij,jk,kl,…`). We see that left to right scales the best with square tensors. This makes sense as the other implementations have some extra overhead to optimize for when we have tensors with unequal dimension sizes. For example, with our greedy implementation we scale quadratically with the number of tensors (to find the best tensor pair to contract), while with left to right we don’t have this overhead.
 
+ **Size 32**
 | Num | PyTorch (s) | Left-to-Right (s) | Greedy (s) |
 | --- | --- | --- | --- |
 | 2 | 1.2e-05 | 1.0e-05 | 1.3e-05 |
@@ -577,13 +578,8 @@ This table shows how the runtime varies with the number of tensors. For this tab
 | 4 | 3.0e-05 | 2.9e-05 | 4.0e-05 |
 | 5 | 4.4e-05 | 3.7e-05 | 5.6e-05 |
 | 6 | 5.7e-05 | 4.6e-05 | 7.7e-05 |
-<details>
-<summary><strong>Other sizes</strong></summary>
-
-<br>
 
 **Size = 8**
-
 | Num | PyTorch (s) | Left-to-Right (s) | Greedy (s) |
 | --- | --- | --- | --- |
 | 2   | 9.0e-06     | 8.0e-06           | 9.0e-06    |
@@ -593,7 +589,6 @@ This table shows how the runtime varies with the number of tensors. For this tab
 | 6   | 4.3e-05     | 3.2e-05           | 5.7e-05    |
 
 **Size = 16**
-
 | Num | PyTorch (s) | Left-to-Right (s) | Greedy (s) |
 | --- | --- | --- | --- |
 | 2   | 1.2e-05     | 1.3e-05           | 1.5e-05    |
@@ -602,7 +597,6 @@ This table shows how the runtime varies with the number of tensors. For this tab
 | 5   | 5.8e-05     | 5.1e-05           | 7.3e-05    |
 | 6   | 5.9e-05     | 4.6e-05           | 7.8e-05    |
 
-</details>
 
 
 **Runtime vs. Unequal Tensor Dimensions**

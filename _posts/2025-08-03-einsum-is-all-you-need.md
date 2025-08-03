@@ -571,6 +571,7 @@ This table shows how each implementation scales with the size of each dimension 
 This table shows how the runtime varies with the number of tensors. For this table each tensor is “square” with a size of 32. I use einsum strings that follow the chain multiplication pattern (`ij,jk,kl,…`). We see that left to right scales the best with square tensors. This makes sense as the other implementations have some extra overhead to optimize for when we have tensors with unequal dimension sizes. For example, with our greedy implementation we scale quadratically with the number of tensors (to find the best tensor pair to contract), while with left to right we don’t have this overhead.
 
  **Size 32**
+
 | Num | PyTorch (s) | Left-to-Right (s) | Greedy (s) |
 | --- | --- | --- | --- |
 | 2 | 1.2e-05 | 1.0e-05 | 1.3e-05 |
@@ -580,6 +581,7 @@ This table shows how the runtime varies with the number of tensors. For this tab
 | 6 | 5.7e-05 | 4.6e-05 | 7.7e-05 |
 
 **Size = 8**
+
 | Num | PyTorch (s) | Left-to-Right (s) | Greedy (s) |
 | --- | --- | --- | --- |
 | 2   | 9.0e-06     | 8.0e-06           | 9.0e-06    |
@@ -589,6 +591,7 @@ This table shows how the runtime varies with the number of tensors. For this tab
 | 6   | 4.3e-05     | 3.2e-05           | 5.7e-05    |
 
 **Size = 16**
+
 | Num | PyTorch (s) | Left-to-Right (s) | Greedy (s) |
 | --- | --- | --- | --- |
 | 2   | 1.2e-05     | 1.3e-05           | 1.5e-05    |

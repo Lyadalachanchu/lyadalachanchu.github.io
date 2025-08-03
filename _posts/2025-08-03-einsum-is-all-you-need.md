@@ -137,8 +137,7 @@ This is essentially the same logic as the first set of loops we saw. Just now, w
 
 <details>
 <summary><strong>Inputs that work</strong></summary>
-
-```python
+<pre><code class="language-python">
 # Tensor multiplication (no transposes)
 tensor_a = torch.rand(3, 2, 4, 2)
 tensor_b = torch.rand(3, 3, 5, 2)
@@ -148,7 +147,7 @@ example_str = "jilw, jekw-> ik"
 tensor_a = torch.rand(3)
 tensor_b = torch.rand(3, 2, 2)
 example_str = "j, jkl-> k"
-```
+</code></pre>
 </details>
     
 

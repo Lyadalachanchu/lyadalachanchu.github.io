@@ -168,11 +168,10 @@ It’s important to note that the output_shape is the shape *before* reductions.
 <details>
 <summary><strong>Python Unpacking</strong></summary>
 
-<br>
-
-I’ll be using syntax like `tensor[*indices]`, which unpacks the list of indices. This means that `tensor_a[*[i, j, k]]` is exactly the same as `tensor_a[i, j, k]`.
+<p>I’ll be using syntax like <code>tensor[*indices]</code>, which unpacks the list of indices. This means that <code>tensor_a[*[i, j, k]]</code> is exactly the same as <code>tensor_a[i, j, k]</code>.</p>
 
 </details>
+
 
     
 
@@ -208,11 +207,9 @@ After summing the products for each element in the output (which is of shape `(1
 <details>
 <summary><strong>Building the Einsum Parser</strong></summary>
 
-<br>
+<p>It’s quite annoying to write out the reduce and common dims each time. We can easily infer this from the einsum string in the following way:</p>
 
-It’s quite annoying to write out the reduce and common dims each time. We can easily infer this from the einsum string in the following way:
-
-```python
+<pre><code class="language-python">
 def parse_faster_einsum(einsum_str, tensors):
     if "->" in einsum_str:
         input, output = einsum_str.split("->")
@@ -224,9 +221,12 @@ def parse_faster_einsum(einsum_str, tensors):
     input_labels = [list(op.strip()) for op in input.split(',')]
     assert len(input_labels) == len(tensors), "Number of inputs specified in str does not match number of tensors"
     return input_labels, output_labels
-Given the input and output labels, we can infer the common dimensions (same character across tensors) and the reduce dimensions (free dimensions that don’t appear in the output labels).
-```
+</code></pre>
+
+<p>Given the input and output labels, we can infer the common dimensions (same character across tensors) and the reduce dimensions (free dimensions that don’t appear in the output labels).</p>
+
 </details>
+
     
 
 ## Faster Einsum
@@ -384,11 +384,9 @@ And since addition and multiplication are associative and commutative, we can gr
 <details>
 <summary><strong>In code</strong></summary>
 
-<br>
+<p>We add a for loop going through <code>tensors</code> from left to right.</p>
 
-We add a for loop going through `tensors` from left to right.
-
-```python
+<pre><code class="language-python">
 # WARNING: The tensor updates are in-place. This might mean that tensors might be changed afterwards.
 def faster_einsum(einsum_str, tensors):
     input_labels, output_labels = parse_faster_einsum(einsum_str, tensors)
@@ -413,9 +411,10 @@ def faster_einsum(einsum_str, tensors):
     for axis in sorted(sum_reduce_axes, reverse=True):
         del intermediate_labels[axis]
     return result.permute(*[output_labels.index(label) for label in intermediate_labels])
-```
+</code></pre>
+
 </details>
-    
+
 
 I chose left to right cause its the first thing that came to mind, but after thinking about it a bit longer, there is probably a better ordering. The order we pick these pairwise einsums probably affects the memory and compute needed. This is because we’d get a different chain of intermediate results (each with a different size). We could get big intermediate tensors, whose axes would later be summed over anyways. For example, lets say we have three tensors with the following shapes:
 
@@ -444,11 +443,9 @@ The optimal ordering would instead contract `B` and `C` first and then contract 
 <details>
 <summary><strong>This is how I implemented it</strong></summary>
 
-<br>
+<p>To find the best tensor pair, this requires a <code>O(n**2)</code> operation, but for most reasonable einsums <code>n</code> is small. We calculate the cost as described above.</p>
 
-To find the best tensor pair, this requires a `O(n**2)` operation, but for most reasonable einsums `n` is small. We calculate the cost as described above.
-
-```python
+<pre><code class="language-python">
 def estimate_contraction_cost(tensor_A_shape, tensor_B_shape, labels_A, labels_B, output_labels, global_count):
     shared = set(labels_A) & set(labels_B)
     contract_dims = [d for d in shared
@@ -530,9 +527,10 @@ def faster_einsum(einsum_str, tensors, use_greedy=True):
         
         left_tensor = tensors[0]
         intermediate_labels = label_lists[0]
-```
+</code></pre>
+
 </details>
-    
+
 
 NB: I think (and don’t quote me on this) that `torch` uses [this implementation](https://arxiv.org/pdf/1304.6112) instead, which is a dynamic programming approach.
 

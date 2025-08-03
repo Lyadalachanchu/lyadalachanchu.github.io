@@ -9,18 +9,15 @@ NB: Einsum is not actually invented by Einstein. This notation actually came fro
 <details>
 <summary><strong>Dimensions, Axes, and Indices</strong></summary>
 
-<br>
+<p>It’s easy to mix these terms up (at least for me). So here’s what I mean by each term.</p>
 
-It’s easy to mix these terms up (at least for me). So here’s what I mean by each term.
+<p><strong>Dimensions:</strong> The total number of independent directions (degrees of freedom) in your data structure. For example, a scalar has 0 dimensions, a matrix has 2 dimensions, and an image (height x width x RGB) has 3 dimensions.</p>
 
-**Dimensions:** The total number of independent directions (degrees of freedom) in your data structure. For example, a scalar has 0 dimensions, a matrix has 2 dimensions, and an image (height x width x RGB) has 3 dimensions.
+<p><strong>Axes:</strong> A way to refer to each “direction” or dimension by an integer label, usually starting at 0. For example, in a 2D array of shape <code>(3, 4)</code> axis 0 runs “down” the rows (length 3) and axis 1 runs “across” the columns (length 4).</p>
 
-**Axes:** A way to refer to each “direction” or dimension by an integer label, usually starting at 0. For example, in a 2D array of shape `(3, 4)` axis 0 runs “down” the rows (length 3) and axis 1 runs “across” the columns (length 4).
-
-**Indices:** A label used to identify elements on a given axis. For example, with a matrix you specify 2 indices to uniquely identify an element. The first index corresponds to axis 0 (row) and the second index corresponds to axis 1 (col).
+<p><strong>Indices:</strong> A label used to identify elements on a given axis. For example, with a matrix you specify 2 indices to uniquely identify an element. The first index corresponds to axis 0 (row) and the second index corresponds to axis 1 (col).</p>
 
 </details>
-
     
 
 ## The Rules of The Game
